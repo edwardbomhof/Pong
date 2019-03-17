@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class Ball extends Thread {
     private final Pong game;
     
@@ -11,6 +12,8 @@ public class Ball extends Thread {
 
     protected float x = Pong.WIDTH / 2 - DIAMETER / 2;
     protected float y = Pong.HEIGHT / 2 - DIAMETER /2;
+    
+    protected Vector2D direction = new Vector2D(1,1);
     
     public float multiplier = 1.05f;
     public float currentSpeed = 1;
@@ -47,7 +50,7 @@ public class Ball extends Thread {
                 going_up = false;
             }
             else {
-                y = y - 1 * multiplier;
+                y = y - ((float)direction.y * currentSpeed);
             }
         }
         else {
@@ -55,7 +58,7 @@ public class Ball extends Thread {
                 going_up = true;
             }
             else {
-                y = y + 1 * multiplier;
+                y = y + ((float)direction.y * currentSpeed);
             }
         }
         
@@ -67,7 +70,7 @@ public class Ball extends Thread {
                 Pong.panel.score2.setText(Integer.toString(Pong.panel.p2.score));
             }
             else {
-                x= x + currentSpeed;
+                x= x + ((float)direction.x * currentSpeed);
             }
             
             if(x + DIAMETER >= Pong.WIDTH) { // Gameover if it hits the right border
@@ -83,7 +86,7 @@ public class Ball extends Thread {
                 Pong.panel.score1.setText(Integer.toString(Pong.panel.p1.score));
             }
             else {
-                x = x - currentSpeed;
+                x = x - ((float)direction.x * currentSpeed);
 
             }
             
