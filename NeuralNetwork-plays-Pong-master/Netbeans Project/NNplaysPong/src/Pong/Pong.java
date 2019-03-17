@@ -73,7 +73,7 @@ public class Pong {
         panel.ball.y = HEIGHT / 2 - panel.ball.DIAMETER /2;
         panel.ball.going_up = true;
         panel.ball.going_right = false;
-        panel.ball.multiplier = 1f;
+        panel.ball.currentSpeed = 1f;
         
         panel.p1.score = 0;
         panel.p2.score = 0;
