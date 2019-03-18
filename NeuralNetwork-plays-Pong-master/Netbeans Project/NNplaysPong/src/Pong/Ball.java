@@ -8,7 +8,7 @@ public class Ball extends Thread {
 
     private final Pong game;
 
-    public static float MAXBOUNCEANGLE = 0.9f;
+    public static float MAXBOUNCEANGLE = 0.75f;
 
     protected final int DIAMETER = 20;
 
@@ -17,9 +17,13 @@ public class Ball extends Thread {
 
     protected Vector2D direction = new Vector2D(1, 1);
 
-    public float increment = 0.0025f;
-    public float currentSpeed = 1.5f;
-    public float maxSpeed = 2.2f;
+    public float standardMaxSpeed = 2.2f;    
+    public float standardCurrentSpeed = 1.5f;
+
+    
+    public float increment = 0.05f;
+    public float currentSpeed = standardCurrentSpeed;
+    public float maxSpeed = standardMaxSpeed;
 
     protected boolean going_up = true;
     protected boolean going_right = true;
@@ -54,12 +58,12 @@ public class Ball extends Thread {
         }
         if (going_right) {
             if (getBounds().intersects(Pong.panel.p2.getBounds())) { // Bounce when it hits the paddle 2 and update the score.
-                
+
                 // this is used to prevent the ball from going the wrong way
                 going_right = false;
                 currentSpeed += (currentSpeed + increment > maxSpeed) ? maxSpeed : increment;
 
-                getBounceAngle(Pong.panel.p2.y, y);
+                direction = getBounceAngle(Pong.panel.p2.y, y + DIAMETER / 2);
 
                 direction.x = direction.x < 0 ? direction.x : direction.x * -1;
 
@@ -68,6 +72,9 @@ public class Ball extends Thread {
 
             }
             if (x + DIAMETER >= Pong.WIDTH) { // Gameover if it hits the right border
+                //Pong.panel.p1.score += 100;
+                Pong.panel.score1.setText(Integer.toString(Pong.panel.p1.score));
+
                 game.gameOver();
             }
         }
@@ -79,25 +86,31 @@ public class Ball extends Thread {
 
                 currentSpeed += (currentSpeed + increment > maxSpeed) ? maxSpeed : increment;
 
-                direction = getBounceAngle(Pong.panel.p1.y, y);
+                direction = getBounceAngle(Pong.panel.p1.y, y + DIAMETER / 2);
                 direction.x = direction.x > 0 ? direction.x : Math.abs(direction.x);
 
                 // direction.x = Math.abs(direction.x);
                 Pong.panel.p1.score++;
                 Pong.panel.score1.setText(Integer.toString(Pong.panel.p1.score));
             } else if (x <= 0) { // Gameover if it hits the right border
+                // Pong.panel.p2.score += 100;
+                Pong.panel.score2.setText(Integer.toString(Pong.panel.p2.score));
+
                 game.gameOver();
             }
         }
-        x += direction.x;
-        y += direction.y;
+        x += (direction.x * Pong.GAMESPEED);
+        y += (direction.y * Pong.GAMESPEED);
     }
 
+    // Get bounce angle calculates the new direction of the ball based on the position where the ball hits the paddle
     private Vector2D getBounceAngle(float paddleY, float intersectY) {
         float relativeIntersectY = intersectY - (paddleY + (Paddle.HEIGHT / 2));
 
-        float normalizedRelativeIntersectionY = (relativeIntersectY / (Paddle.HEIGHT / 2));
-        float bounceAngle = normalizedRelativeIntersectionY * MAXBOUNCEANGLE;
+        if (relativeIntersectY > Paddle.HEIGHT / 2 || relativeIntersectY < -(Paddle.HEIGHT / 2)) {
+            relativeIntersectY = (relativeIntersectY < 0) ? -(Paddle.HEIGHT / 2) : Paddle.HEIGHT / 2;
+            
+        }
 
         Vector2D returnVector = new Vector2D();
 
@@ -107,11 +120,6 @@ public class Ball extends Thread {
 
         returnVector.x = (currentSpeed - Math.abs(returnVector.y));
 
-        System.out.println("cs = " + currentSpeed + ", relativeY = " + relativeY + ", relativeIntersect = " + relativeIntersectY + ", x = " + returnVector.x + ", y + " + returnVector.y + ", currentSpeed = " + currentSpeed);
-
-        /*
-        returnVector.x = currentSpeed * Math.cos(bounceAngle);
-        returnVector.y = currentSpeed * -Math.sin(bounceAngle);*/
         returnVector.multiply(currentSpeed);
 
         return returnVector;

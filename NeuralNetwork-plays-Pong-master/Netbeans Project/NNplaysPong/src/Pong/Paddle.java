@@ -31,11 +31,11 @@ public class Paddle extends Thread {
     private void move() {
         // If direction == down and the paddle isn't touching the bottom
         if(direction == 'd' && y + HEIGHT < Pong.HEIGHT) {
-            y++;
+            y += (1*Pong.GAMESPEED);
         }
         // If direction == up and the paddle isn't touching the top
         if(direction == 'u' && y > 0) {
-            y--;
+            y -= (1*Pong.GAMESPEED);
         }
     }
     
