@@ -17,7 +17,7 @@ public class Pong {
 
     // Setup neural network
     private final int genomes_per_generation = 10;
-    private final int neurons_amount[] = {5, 5, 1};
+    private final int neurons_amount[] = {5, 5, 3, 1};
     private final NeuralNetwork nn = new NeuralNetwork(neurons_amount, genomes_per_generation, 0.5, -1, 1);
     protected boolean autoplay = true;
     private final double inputs[] = new double[5];
@@ -81,7 +81,7 @@ public class Pong {
         panel.ball.going_up = r.nextBoolean();
         panel.ball.currentSpeed = panel.ball.standardCurrentSpeed;
         int random = r.nextInt(((int) (Ball.MAXBOUNCEANGLE * 100) - 10) + 1) + 10;
-        panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) :-((panel.ball.currentSpeed - (float) random / 100)) , panel.ball.going_right ? (float) random / 100: -(float)random/100);
+        panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) :-((panel.ball.currentSpeed - (float) random / 100)) , panel.ball.going_up ? (float) random / 100: -(float)random/100);
 
         panel.p1.score = 0;
         panel.p2.score = 0;

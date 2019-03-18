@@ -17,15 +17,14 @@ public class Ball extends Thread {
 
     protected Vector2D direction = new Vector2D(1, 1);
 
-    public float standardMaxSpeed = 2.2f;    
+    public float standardMaxSpeed = 2.2f;
     public float standardCurrentSpeed = 1.5f;
 
-    
     public float increment = 0.05f;
     public float currentSpeed = standardCurrentSpeed;
     public float maxSpeed = standardMaxSpeed;
 
-    protected boolean going_up = true;
+    protected boolean going_up = false;
     protected boolean going_right = true;
 
     public Ball(Pong game) {
@@ -51,10 +50,12 @@ public class Ball extends Thread {
     }
 
     private void move() throws InterruptedException {
-        if (y <= 0) {
+        if (y <= 0 && going_up) {
             direction.y = direction.y * -1;
-        } else if (y + DIAMETER >= Pong.HEIGHT) {
-            direction.y = direction.y * -1;
+            going_up = false;
+        } if (y + DIAMETER >= Pong.HEIGHT && !going_up) {
+            direction.y = direction.y*-1;
+            going_up = true;
         }
         if (going_right) {
             if (getBounds().intersects(Pong.panel.p2.getBounds())) { // Bounce when it hits the paddle 2 and update the score.
@@ -67,6 +68,7 @@ public class Ball extends Thread {
 
                 direction.x = direction.x < 0 ? direction.x : direction.x * -1;
 
+                going_up = direction.y <= 0;
                 Pong.panel.p2.score++;
                 Pong.panel.score2.setText(Integer.toString(Pong.panel.p2.score));
 
@@ -84,10 +86,12 @@ public class Ball extends Thread {
             if (getBounds().intersects(Pong.panel.p1.getBounds())) { // Bounce when it hits the paddle 2 and update the score
                 going_right = true;
 
+
                 currentSpeed += (currentSpeed + increment > maxSpeed) ? maxSpeed : increment;
 
                 direction = getBounceAngle(Pong.panel.p1.y, y + DIAMETER / 2);
                 direction.x = direction.x > 0 ? direction.x : Math.abs(direction.x);
+                going_up = direction.y <= 0;
 
                 // direction.x = Math.abs(direction.x);
                 Pong.panel.p1.score++;
@@ -109,7 +113,7 @@ public class Ball extends Thread {
 
         if (relativeIntersectY > Paddle.HEIGHT / 2 || relativeIntersectY < -(Paddle.HEIGHT / 2)) {
             relativeIntersectY = (relativeIntersectY < 0) ? -(Paddle.HEIGHT / 2) : Paddle.HEIGHT / 2;
-            
+
         }
 
         Vector2D returnVector = new Vector2D();
