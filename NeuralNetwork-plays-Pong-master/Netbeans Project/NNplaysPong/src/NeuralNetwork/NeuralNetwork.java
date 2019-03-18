@@ -1,12 +1,17 @@
 package NeuralNetwork;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import static java.lang.Math.exp;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class NeuralNetwork {    
     protected int layers_amount;
@@ -20,6 +25,7 @@ public class NeuralNetwork {
     protected int current_generation = 0;
     private double random_mutation_probability;
     private double min_weight, max_weight;
+     
     
     private SaveLoad save_load;
     private LiveView live_view;
@@ -111,6 +117,23 @@ public class NeuralNetwork {
         }
     }
     
+    private void saveScores() {
+        try{
+          FileWriter fr = new FileWriter("Test2.txt");
+          BufferedWriter br = new BufferedWriter(fr);
+          PrintWriter out = new PrintWriter(br);
+          for(int i=0; i<fits.length; i++){
+                   
+          out.write((int)fits[i] + "\n");
+          }
+        out.close();   
+        }
+       
+        catch(IOException e){
+        System.out.println(e);   
+        } 
+    }
+    
     public double[] getOutputs(double inputs[]) {
         // Copy function parameters
         this.inputs = inputs;
@@ -139,7 +162,7 @@ public class NeuralNetwork {
     
     private void newGeneration() {
         boolean no_progress = true;
-	
+	saveScores();
 	// Check if the NN made any progress
 	for(int i = 0; i < genomes_per_generation; i++) {
             if(fits[i] != 0) {
