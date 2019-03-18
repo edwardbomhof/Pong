@@ -12,8 +12,8 @@ public class Pong {
     protected static final int HEIGHT = 400;
     protected static JFrame frame;
     protected static Panel panel;
-    
-    public static int GAMESPEED = 5;
+
+    public static int GAMESPEED = 7;
 
     // Setup neural network
     private final int genomes_per_generation = 10;
@@ -76,11 +76,12 @@ public class Pong {
         // RESET ALL
         panel.ball.x = WIDTH / 2 - panel.ball.DIAMETER / 2;
         panel.ball.y = HEIGHT / 2 - panel.ball.DIAMETER / 2;
-        panel.ball.going_right = false;
-        panel.ball.currentSpeed = panel.ball.standardCurrentSpeed;
         Random r = new Random();
-        int random = r.nextInt(((int)(Ball.MAXBOUNCEANGLE * 100) - 10) + 1) + 10;
-        panel.ball.direction = new Vector2D(-((panel.ball.currentSpeed - (float) random / 100)), (float) random / 100);
+        panel.ball.going_right = r.nextBoolean();
+        panel.ball.going_up = r.nextBoolean();
+        panel.ball.currentSpeed = panel.ball.standardCurrentSpeed;
+        int random = r.nextInt(((int) (Ball.MAXBOUNCEANGLE * 100) - 10) + 1) + 10;
+        panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) :-((panel.ball.currentSpeed - (float) random / 100)) , panel.ball.going_right ? (float) random / 100: -(float)random/100);
 
         panel.p1.score = 0;
         panel.p2.score = 0;
