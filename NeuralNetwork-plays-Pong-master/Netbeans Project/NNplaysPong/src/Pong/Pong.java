@@ -71,9 +71,9 @@ public class Pong {
         
         panel.ball.x = WIDTH / 2 - panel.ball.DIAMETER / 2;
         panel.ball.y = HEIGHT / 2 - panel.ball.DIAMETER /2;
-        panel.ball.going_up = true;
         panel.ball.going_right = false;
-        panel.ball.currentSpeed = 1f;
+        panel.ball.currentSpeed = 1.5f;
+        panel.ball.direction = new Vector2D(-1,-1);
         
         panel.p1.score = 0;
         panel.p2.score = 0;
