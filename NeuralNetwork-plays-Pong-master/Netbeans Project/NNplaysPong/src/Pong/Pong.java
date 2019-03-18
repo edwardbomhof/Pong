@@ -70,7 +70,7 @@ public class Pong {
     protected void gameOver() throws InterruptedException {
         // Get the fitness of the current genome, then create a new genome
         nn.newGenome(panel.p1.score);
-
+        
         Thread.sleep(2000 / Pong.GAMESPEED);
 
         // RESET ALL

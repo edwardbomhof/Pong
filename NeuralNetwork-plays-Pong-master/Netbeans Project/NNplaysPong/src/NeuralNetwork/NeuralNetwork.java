@@ -1,7 +1,9 @@
 package NeuralNetwork;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,11 +27,10 @@ public class NeuralNetwork {
     protected int current_generation = 0;
     private double random_mutation_probability;
     private double min_weight, max_weight;
-     
-    
+        
     private SaveLoad save_load;
     private LiveView live_view;
-    
+
     public NeuralNetwork(int neurons_amount[], int genomes_per_generation, double random_mutation_probability, double min_weight, double max_weight) {
         // Copy costructor parameters
 	this.neurons_amount = neurons_amount;
@@ -108,7 +109,7 @@ public class NeuralNetwork {
                 }
             }
 	}
-        
+
         try {
             save_load.saveToFile();
         }
@@ -117,21 +118,27 @@ public class NeuralNetwork {
         }
     }
     
-    private void saveScores() {
-        try{
-          FileWriter fr = new FileWriter("Test2.txt");
-          BufferedWriter br = new BufferedWriter(fr);
-          PrintWriter out = new PrintWriter(br);
-          for(int i=0; i<fits.length; i++){
-                   
-          out.write((int)fits[i] + "\n");
-          }
-        out.close();   
-        }
-       
-        catch(IOException e){
-        System.out.println(e);   
+     private final String file_name = "scores.txt";
+    private final File file = new File(file_name);
+    
+    private boolean first_line = true;
+    
+    public void saveScores() {        
+        try(PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
+
+            if(!first_line) {
+                writer.print("\n");
+            }
+            else {
+                first_line = false;
+            }
+                      for(int i=0; i<fits.length; i++){
+                          writer.print(fits[i]);
+                          writer.print("\n");
+                      }
+
         } 
+        catch(Exception io){}
     }
     
     public double[] getOutputs(double inputs[]) {
@@ -146,11 +153,14 @@ public class NeuralNetwork {
     
     public void newGenome(double current_genome_fit) {
         // Set current genome fit
+
 	fits[current_genome] = current_genome_fit;
 	
 	// If all genomes have been executed, create a new generation
 	if(current_genome + 1 == genomes_per_generation) {
             current_genome = 0;
+                            saveScores();
+
             newGeneration();
 	}
 	else {
@@ -162,7 +172,6 @@ public class NeuralNetwork {
     
     private void newGeneration() {
         boolean no_progress = true;
-	saveScores();
 	// Check if the NN made any progress
 	for(int i = 0; i < genomes_per_generation; i++) {
             if(fits[i] != 0) {
