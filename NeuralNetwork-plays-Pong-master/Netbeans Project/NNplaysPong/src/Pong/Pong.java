@@ -1,8 +1,10 @@
 package Pong;
 
 import NeuralNetwork.NeuralNetwork;
+import NeuralNetwork.SaveLoad;
 
 import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 import java.util.Random;
 
@@ -13,23 +15,39 @@ public class Pong {
     protected static JFrame frame;
     protected static Panel panel;
 
+    public static int generationsToRun = 2;
+    public static int totalRuns = 2;
+
     public static int GAMESPEED = 7;
 
+    private static double[][] inputRuns = { ///Genomes per generation, runs, min_weight, max_weight, random_mutation_probability
+        {10, 2, -1, 1, 0.5},
+        {10, 2, -1, 1, 1}};
+    private static int[][] neurons_amount_runs
+            = {
+                {5, 5, 3, 1},
+                {5, 5, 3, 1}
+            };
+
     // Setup neural network
-    private final int genomes_per_generation = 10;
-    private final int neurons_amount[] = {5, 5, 3, 1};
+    private static int genomes_per_generation = 10;
+    private static int neurons_amount[] = {5, 5, 3, 1};
 
-    private final double random_mutation_probability = 0.1;
-    private final double minWeight = -1;
-    private final double maxWeight = 1;
+    private static double random_mutation_probability = 1;
+    private static double minWeight = -1;
+    private static double maxWeight = 1;
 
-    private final NeuralNetwork nn = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight);
+    private static NeuralNetwork nn; // = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight);
     protected boolean autoplay = true;
-    private final double inputs[] = new double[5];
-    private double outputs[] = new double[1];
+    private static final double inputs[] = new double[5];
+    private static double outputs[] = new double[1];
+
+    private static Pong pong;
+
+    private static int currentGame = 0;
 
     public static void main(String[] args) {
-        new Pong();        
+        run();
     }
 
     public Pong() {
@@ -43,10 +61,12 @@ public class Pong {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        
-        
-        
+
         System.out.println(toString());
+    }
+
+    public void close() {
+        pong = null;
     }
 
     protected void learn() {
@@ -101,14 +121,43 @@ public class Pong {
 
         panel.score1.setText("0");
         panel.score2.setText("0");
+
+        if (nn.current_generation == generationsToRun) {
+            run();
+        }
     }
-    
-    public String toString(){
+
+    public String toString() {
         String returnstring = "";
         returnstring += "Random mutation probability = " + random_mutation_probability + "\n MinWeight = " + minWeight + "\n maxWeight = " + maxWeight + "\n Genomes per generation = " + genomes_per_generation + "\n Neural network setup = ";
-        for (int i = 0; i < neurons_amount.length; i++){
-            returnstring += ", " + neurons_amount[i]; 
+        for (int i = 0; i < neurons_amount.length; i++) {
+            returnstring += ", " + neurons_amount[i];
         }
         return returnstring;
+    }
+
+    public static void run() {
+        if (currentGame < totalRuns) {
+            if (pong != null) {
+                pong.close();
+            }
+            neurons_amount = neurons_amount_runs[currentGame];
+
+            genomes_per_generation = (int) inputRuns[currentGame][0];
+            random_mutation_probability = inputRuns[currentGame][4];
+            minWeight = (int) inputRuns[currentGame][2];
+            maxWeight = (int) inputRuns[currentGame][3];
+            generationsToRun = (int) inputRuns[currentGame][1];
+
+            nn = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight, "synapses" + currentGame + ".txt");
+
+            nn.file = new File("scores" + currentGame + ".txt");
+            
+            pong = new Pong();
+
+            currentGame++;
+        } else {
+            System.exit(0);
+        }
     }
 }

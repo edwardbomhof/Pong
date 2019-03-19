@@ -15,12 +15,16 @@ public class SaveLoad {
     private final NeuralNetwork nn;
     
     private final String file_name = "synapses.txt";
-    private final File file = new File(file_name);
+    public File file = new File(file_name);
     
     private boolean first_line = true;
     
     public SaveLoad(NeuralNetwork nn) {
         this.nn = nn;
+    }
+    public SaveLoad(NeuralNetwork nn, File file) {
+        this.nn = nn;
+        this.file = file;
     }
     
     protected boolean fileExists() {        
