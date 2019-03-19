@@ -19,7 +19,7 @@ public class Pong {
     private final int genomes_per_generation = 10;
     private final int neurons_amount[] = {5, 5, 3, 1};
 
-    private final double random_mutation_probability = 0.5;
+    private final double random_mutation_probability = 0.1;
     private final double minWeight = -1;
     private final double maxWeight = 1;
 
@@ -105,7 +105,7 @@ public class Pong {
     
     public String toString(){
         String returnstring = "";
-        returnstring += "Random mutation probability = " + random_mutation_probability + "/n MinWeight = " + minWeight + "/n maxWeight = " + maxWeight + "/n Genomes per generation = " + genomes_per_generation + "/n Neural network setup = ";
+        returnstring += "Random mutation probability = " + random_mutation_probability + "\n MinWeight = " + minWeight + "\n maxWeight = " + maxWeight + "\n Genomes per generation = " + genomes_per_generation + "\n Neural network setup = ";
         for (int i = 0; i < neurons_amount.length; i++){
             returnstring += ", " + neurons_amount[i]; 
         }
