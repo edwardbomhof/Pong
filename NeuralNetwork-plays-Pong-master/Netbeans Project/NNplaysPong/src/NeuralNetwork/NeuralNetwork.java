@@ -32,7 +32,7 @@ public class NeuralNetwork {
     
 
     public SaveLoad save_load;
-    private LiveView live_view;
+    public LiveView live_view;
 
    public NeuralNetwork(int neurons_amount[], int genomes_per_generation, double random_mutation_probability, double min_weight, double max_weight){
        this(neurons_amount, genomes_per_generation, random_mutation_probability, min_weight, max_weight, "synapses.txt");

@@ -145,6 +145,7 @@ public class Pong {
 
         frame = null;
 
+        nn.live_view = null;
         nn.file = null;
         nn = null;
         pong = null;
