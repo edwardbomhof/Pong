@@ -10,24 +10,100 @@ import java.util.Random;
 
 public class Pong {
 
+    private static Pong _instance;
+
+    public static Pong GetInstance() {
+        if (_instance == null) {
+            _instance = new Pong();
+        }
+        return _instance;
+    }
+
+    public static void RemovePong() {
+        _instance = null;
+    }
+
     protected static final int WIDTH = 640;
     protected static final int HEIGHT = 400;
     protected static JFrame frame;
     protected static Panel panel;
 
     public static int generationsToRun = 2;
-    public static int totalRuns = 2;
 
-    public static int GAMESPEED = 7;
+    public static int GAMESPEED = 10;
 
     private static double[][] inputRuns = { ///Genomes per generation, runs, min_weight, max_weight, random_mutation_probability
-        {10, 2, -1, 1, 0.5},
-        {10, 2, -1, 1, 1}};
+        {10, 125, -1, 1, 0.5},
+        {10, 125, -2, 2, 0.5},
+        {10, 125, -1, 1, 1},
+        {10, 125, -2, 2, 1},
+        {10, 125, -2, 2, 2},
+        {10, 125, -1.5, 1.5, 1.5},
+        {10, 125, -1.5, 1.5, 1.5},
+        {3, 417, -1, 1, 1},
+        {3, 417, -2, 2, 2},
+        {5, 250, -1, 1, 1},
+        {5, 250, -2, 2, 2},
+        {10, 125, -1, 1, 0.5},
+        {10, 125, -2, 2, 0.5},
+        {10, 125, -1, 1, 1},
+        {10, 125, -2, 2, 1},
+        {10, 125, -2, 2, 2},
+        {10, 125, -1.5, 1.5, 1.5},
+        {10, 125, -1.5, 1.5, 1.5},
+        {3, 417, -1, 1, 1},
+        {3, 417, -2, 2, 2},
+        {5, 250, -1, 1, 1},
+        {5, 250, -2, 2, 2},
+        {10, 125, -1, 1, 0.5},
+        {10, 125, -2, 2, 0.5},
+        {10, 125, -1, 1, 1},
+        {10, 125, -2, 2, 1},
+        {10, 125, -2, 2, 2},
+        {10, 125, -1.5, 1.5, 1.5},
+        {10, 125, -1.5, 1.5, 1.5},
+        {3, 417, -1, 1, 1},
+        {3, 417, -2, 2, 2},
+        {5, 250, -1, 1, 1},
+        {5, 250, -2, 2, 2},};
+
     private static int[][] neurons_amount_runs
             = {
                 {5, 5, 3, 1},
-                {5, 5, 3, 1}
-            };
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 3, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},
+                {5, 4, 1},};
+
+    public static int totalRuns = inputRuns.length;
 
     // Setup neural network
     private static int genomes_per_generation = 10;
@@ -66,6 +142,11 @@ public class Pong {
     }
 
     public void close() {
+
+        frame = null;
+
+        nn.file = null;
+        nn = null;
         pong = null;
     }
 
@@ -100,8 +181,7 @@ public class Pong {
         // Get the fitness of the current genome, then create a new genome
         nn.newGenome(panel.p1.score);
 
-        Thread.sleep(2000 / Pong.GAMESPEED);
-
+        //Thread.sleep(2000 / Pong.GAMESPEED);
         // RESET ALL
         panel.ball.x = WIDTH / 2 - panel.ball.DIAMETER / 2;
         panel.ball.y = HEIGHT / 2 - panel.ball.DIAMETER / 2;
@@ -152,8 +232,8 @@ public class Pong {
             nn = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight, "synapses" + currentGame + ".txt");
 
             nn.file = new File("scores" + currentGame + ".txt");
-            
-            pong = new Pong();
+
+            pong = Pong.GetInstance();
 
             currentGame++;
         } else {

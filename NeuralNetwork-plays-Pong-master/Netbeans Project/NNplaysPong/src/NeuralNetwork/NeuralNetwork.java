@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 public class NeuralNetwork {
 
     protected int layers_amount;
-    private double fits[]; // [genome_index]
+    public double fits[]; // [genome_index]
     protected int neurons_amount[]; // [layer_index]. Must be >= 2 (inputs and outputs). This is also used to calculate the synapses amount
     private double inputs[];
     protected double neurons[][]; // [layer_index][neuron_index]
