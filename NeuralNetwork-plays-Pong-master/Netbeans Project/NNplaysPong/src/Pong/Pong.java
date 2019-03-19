@@ -18,13 +18,18 @@ public class Pong {
     // Setup neural network
     private final int genomes_per_generation = 10;
     private final int neurons_amount[] = {5, 5, 3, 1};
-    private final NeuralNetwork nn = new NeuralNetwork(neurons_amount, genomes_per_generation, 0.5, -1, 1);
+
+    private final double random_mutation_probability = 0.5;
+    private final double minWeight = -1;
+    private final double maxWeight = 1;
+
+    private final NeuralNetwork nn = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight);
     protected boolean autoplay = true;
     private final double inputs[] = new double[5];
     private double outputs[] = new double[1];
 
     public static void main(String[] args) {
-        new Pong();
+        new Pong();        
     }
 
     public Pong() {
@@ -38,6 +43,10 @@ public class Pong {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        
+        
+        
+        System.out.println(toString());
     }
 
     protected void learn() {
@@ -70,7 +79,7 @@ public class Pong {
     protected void gameOver() throws InterruptedException {
         // Get the fitness of the current genome, then create a new genome
         nn.newGenome(panel.p1.score);
-        
+
         Thread.sleep(2000 / Pong.GAMESPEED);
 
         // RESET ALL
@@ -81,7 +90,7 @@ public class Pong {
         panel.ball.going_up = r.nextBoolean();
         panel.ball.currentSpeed = panel.ball.standardCurrentSpeed;
         int random = r.nextInt(((int) (Ball.MAXBOUNCEANGLE * 100) - 10) + 1) + 10;
-        panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) :-((panel.ball.currentSpeed - (float) random / 100)) , panel.ball.going_up ? (float) random / 100: -(float)random/100);
+        panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) : -((panel.ball.currentSpeed - (float) random / 100)), panel.ball.going_up ? (float) random / 100 : -(float) random / 100);
 
         panel.p1.score = 0;
         panel.p2.score = 0;
@@ -92,5 +101,14 @@ public class Pong {
 
         panel.score1.setText("0");
         panel.score2.setText("0");
+    }
+    
+    public String toString(){
+        String returnstring = "";
+        returnstring += "Random mutation probability = " + random_mutation_probability + "/n MinWeight = " + minWeight + "/n maxWeight = " + maxWeight + "/n Genomes per generation = " + genomes_per_generation + "/n Neural network setup = ";
+        for (int i = 0; i < neurons_amount.length; i++){
+            returnstring += ", " + neurons_amount[i]; 
+        }
+        return returnstring;
     }
 }
