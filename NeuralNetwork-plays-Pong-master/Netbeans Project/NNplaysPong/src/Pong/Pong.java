@@ -43,51 +43,27 @@ public class Pong {
         {3, 417, -1, 1, 1},
         {3, 417, -2, 2, 2},
         {5, 250, -1, 1, 1},
-        {5, 250, -2, 2, 2},
-        
-        {10, 125, -1, 1, 0.5},
-        {10, 125, -2, 2, 0.5},
-        {10, 125, -1, 1, 1},
-        {10, 125, -2, 2, 1},
-        {10, 125, -2, 2, 2},
-        {10, 125, -1.5, 1.5, 1.5},
-        {10, 125, -1.5, 1.5, 1.5},
-        {3, 417, -1, 1, 1},
-        {3, 417, -2, 2, 2},
-        {5, 250, -1, 1, 1},
-        {5, 250, -2, 2, 2},};
+        {5, 250, -2, 2, 2}};
 
     private static int[][] neurons_amount_runs
             = {
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                {5, 8, 8, 1},
-                
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},
-                {5, 8, 5, 1},};
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1},
+                {2, 2, 1}};
 
     public static int totalRuns = inputRuns.length;
 
     // Setup neural network
     private static int genomes_per_generation = 10;
-    private static int neurons_amount[] = {5, 5, 3, 1};
+    private static int neurons_amount[] = {2,2, 1};
 
     private static double random_mutation_probability = 1;
     private static double minWeight = -1;
@@ -95,7 +71,7 @@ public class Pong {
 
     private static NeuralNetwork nn; // = new NeuralNetwork(neurons_amount, genomes_per_generation, random_mutation_probability, minWeight, maxWeight);
     protected boolean autoplay = true;
-    private static final double inputs[] = new double[5];
+    private static final double inputs[] = new double[2];
     private static double outputs[] = new double[1];
 
     private static Pong pong;
@@ -143,11 +119,7 @@ public class Pong {
 
         // Get the inputs from the game and the output from the neural network
         inputs[0] = panel.ball.y;
-        inputs[1] = panel.ball.x;
-        inputs[2] = panel.p1.y;
-        inputs[3] = panel.ball.direction.x;
-        inputs[4] = panel.ball.direction.y;
-
+        inputs[1] = panel.p1.y;
         outputs = nn.getOutputs(inputs);
 
         // Do an action according to the output value
