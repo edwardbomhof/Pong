@@ -30,7 +30,7 @@ public class Pong {
 
     public static int generationsToRun = 2;
 
-    public static int GAMESPEED = 10;
+    public static int GAMESPEED = 5;
 
     private static double[][] inputRuns = { ///Genomes per generation, runs, min_weight, max_weight, random_mutation_probability
         {10, 125, -1, 1, 0.5},

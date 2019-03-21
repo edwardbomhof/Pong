@@ -49,13 +49,58 @@ public class Ball extends Thread {
         }
     }
 
+    private Vector2D newPositionBounds(Vector2D ballPosition, Vector2D Direction) {
+        Vector2D newPosition = ballPosition;
+        if (Direction.y < 0) {
+            double yDistanceFromBorder = 0 - ballPosition.y;
+            double xDistanceFromBorder = (yDistanceFromBorder / Direction.y) * Direction.x;
+
+            Vector2D bouncePosition = ballPosition.clone();
+            bouncePosition.add(new Vector2D(xDistanceFromBorder, yDistanceFromBorder));
+
+            Vector2D restDirection = Direction.clone();
+            restDirection.x = restDirection.x - xDistanceFromBorder;
+            restDirection.y = restDirection.y - yDistanceFromBorder;
+
+            newPosition.y = bouncePosition.y + Math.abs(restDirection.y);
+            newPosition.x = ballPosition.x + Direction.x;
+
+        } else {
+            double yDistanceFromBorder = Pong.HEIGHT - ballPosition.y;
+            double xDistanceFromBorder = (yDistanceFromBorder / Direction.y) * Direction.x;
+
+            Vector2D bouncePosition = ballPosition.clone();
+            bouncePosition.add(new Vector2D(xDistanceFromBorder, yDistanceFromBorder));
+
+            Vector2D restDirection = Direction.clone();
+            restDirection.x = restDirection.x - xDistanceFromBorder;
+            restDirection.y = restDirection.y - yDistanceFromBorder;
+
+            newPosition.y = bouncePosition.y + Math.abs(restDirection.y);
+            newPosition.x = ballPosition.x + Direction.x;
+        }
+
+        return newPosition;
+    }
+
     private void move() throws InterruptedException {
-        if (y <= 0 && going_up) {
+        if ((y <= 0 || y + direction.y <= 0) && going_up) {
+
+            Vector2D newPosition = newPositionBounds(new Vector2D(x, y), direction);
+
+            x = (int) newPosition.x;
+            y = (int) newPosition.y;
+
             direction.y = direction.y * -1;
             going_up = false;
-        } if (y + DIAMETER >= Pong.HEIGHT && !going_up) {
-            direction.y = direction.y*-1;
+
+            return;
+
+        }
+        if ((y + DIAMETER >= Pong.HEIGHT || y + direction.y >= Pong.HEIGHT) && !going_up) {
+            direction.y = direction.y * -1;
             going_up = true;
+            //   return;
         }
         if (going_right) {
             if (getBounds().intersects(Pong.panel.p2.getBounds())) { // Bounce when it hits the paddle 2 and update the score.
@@ -86,7 +131,6 @@ public class Ball extends Thread {
             if (getBounds().intersects(Pong.panel.p1.getBounds())) { // Bounce when it hits the paddle 2 and update the score
                 going_right = true;
 
-
                 currentSpeed += (currentSpeed + increment > maxSpeed) ? maxSpeed : increment;
 
                 direction = getBounceAngle(Pong.panel.p1.y, y + DIAMETER / 2);
@@ -103,6 +147,7 @@ public class Ball extends Thread {
                 game.gameOver();
             }
         }
+
         x += (direction.x * Pong.GAMESPEED);
         y += (direction.y * Pong.GAMESPEED);
     }
