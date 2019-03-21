@@ -66,7 +66,7 @@ public class Ball extends Thread {
             newPosition.x = ballPosition.x + Direction.x;
 
         } else {
-            double yDistanceFromBorder = Pong.HEIGHT - ballPosition.y;
+            double yDistanceFromBorder = Pong.HEIGHT - (ballPosition.y + DIAMETER);
             double xDistanceFromBorder = (yDistanceFromBorder / Direction.y) * Direction.x;
 
             Vector2D bouncePosition = ballPosition.clone();
@@ -76,7 +76,7 @@ public class Ball extends Thread {
             restDirection.x = restDirection.x - xDistanceFromBorder;
             restDirection.y = restDirection.y - yDistanceFromBorder;
 
-            newPosition.y = bouncePosition.y + Math.abs(restDirection.y);
+            newPosition.y = bouncePosition.y + Math.abs(restDirection.y) - DIAMETER;
             newPosition.x = ballPosition.x + Direction.x;
         }
 
@@ -84,7 +84,7 @@ public class Ball extends Thread {
     }
 
     private void move() throws InterruptedException {
-        if ((y <= 0 || y + direction.y <= 0) && going_up) {
+        if ((y <= 0 || y + direction.y * Pong.GAMESPEED <= 0) && going_up) {
 
             Vector2D newPosition = newPositionBounds(new Vector2D(x, y), direction);
 
@@ -97,10 +97,15 @@ public class Ball extends Thread {
             return;
 
         }
-        if ((y + DIAMETER >= Pong.HEIGHT || y + direction.y >= Pong.HEIGHT) && !going_up) {
+        if ((y + DIAMETER >= Pong.HEIGHT || y + direction.y * Pong.GAMESPEED>= Pong.HEIGHT) && !going_up) {
+            Vector2D newPosition = newPositionBounds(new Vector2D(x, y + DIAMETER), direction);
+
+            x = (int) newPosition.x;
+            y = (int) newPosition.y;
+
             direction.y = direction.y * -1;
             going_up = true;
-            //   return;
+               return;
         }
         if (going_right) {
             if (getBounds().intersects(Pong.panel.p2.getBounds())) { // Bounce when it hits the paddle 2 and update the score.

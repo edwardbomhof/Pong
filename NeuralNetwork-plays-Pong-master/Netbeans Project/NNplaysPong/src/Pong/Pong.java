@@ -30,7 +30,7 @@ public class Pong {
 
     public static int generationsToRun = 2;
 
-    public static int GAMESPEED = 5;
+    public static int GAMESPEED = 1;
 
     private static double[][] inputRuns = { ///Genomes per generation, runs, min_weight, max_weight, random_mutation_probability
         {10, 125, -1, 1, 0.5},
@@ -142,7 +142,7 @@ public class Pong {
         panel.ball.going_right = r.nextBoolean();
         panel.ball.going_up = r.nextBoolean();
         panel.ball.currentSpeed = panel.ball.standardCurrentSpeed;
-        int random = r.nextInt(((int) (Ball.MAXBOUNCEANGLE * 100) - 10) + 1) + 10;
+        int random = r.nextInt(((int) (0.6f * 100) - 10) + 1) + 10;
         panel.ball.direction = new Vector2D(panel.ball.going_right ? ((panel.ball.currentSpeed - (float) random / 100)) : -((panel.ball.currentSpeed - (float) random / 100)), panel.ball.going_up ? (float) random / 100 : -(float) random / 100);
 
         panel.p1.score = 0;
